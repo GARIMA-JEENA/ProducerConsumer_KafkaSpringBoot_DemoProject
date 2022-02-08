@@ -1,7 +1,10 @@
 package com.training.task.userserviceimplement;
 
+import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +28,13 @@ public class UserServiceImplement implements UserService {
 	KafkaTemplate<String, Message> kafkaTemplate;
 
 	private static final String TOPIC = "TrainingTask3";
+
+	@Override
+	public List<UserDto> getAllUsers(Pageable page) {
+		Page<User> pagedResult = userDao.findAll(page);
+		List<User> l = pagedResult.getContent();
+		return UserUtil.convertUserToDto(l);
+	}
 
 	@Override
 	public List<UserDto> getAllUsers() {
@@ -63,6 +73,7 @@ public class UserServiceImplement implements UserService {
 		kafkaTemplate.send(TOPIC, message);
 	}
 
+	@Override
 	public void deleteUser(String rollNumber) {
 		if (userDao.existsById(rollNumber) == false) {
 			throw new UserNotFoundException("User with Given Id does not exists.");
@@ -74,7 +85,5 @@ public class UserServiceImplement implements UserService {
 		message.setUserDto(userDto);
 		kafkaTemplate.send(TOPIC, message);
 	}
-
-	
 
 }

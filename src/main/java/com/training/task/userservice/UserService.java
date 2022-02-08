@@ -2,6 +2,8 @@ package com.training.task.userservice;
 
 import java.util.List;
 
+import org.springframework.data.domain.Pageable;
+
 import com.training.task.message.UserDto;
 
 public interface UserService {
@@ -15,5 +17,7 @@ public interface UserService {
 	public void updateUser(UserDto userDto);
 
 	public void deleteUser(String rollNumber);
+
+	public List<UserDto> getAllUsers(Pageable page);
 
 }
