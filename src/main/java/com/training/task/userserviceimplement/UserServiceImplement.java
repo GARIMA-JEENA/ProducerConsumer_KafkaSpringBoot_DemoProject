@@ -24,7 +24,7 @@ public class UserServiceImplement implements UserService {
 	@Autowired
 	KafkaTemplate<String, Message> kafkaTemplate;
 
-	private static final String TOPIC = "Task3";
+	private static final String TOPIC = "TrainingTask3";
 
 	@Override
 	public List<UserDto> getAllUsers() {

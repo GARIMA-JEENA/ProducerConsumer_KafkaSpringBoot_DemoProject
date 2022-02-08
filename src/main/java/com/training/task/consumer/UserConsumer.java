@@ -1,6 +1,7 @@
 package com.training.task.consumer;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
@@ -14,12 +15,13 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
+@ConditionalOnProperty(prefix="kafka",value="enabled")
 public class UserConsumer {
 
 	@Autowired
 	private UserConsumerService userConsumerService;
 
-	@KafkaListener(topics = "Task3", groupId = "Group1", containerFactory = "userKafkaListenerFactory", autoStartup = "${listen.auto.start:true}")
+	@KafkaListener(topics = "TrainingTask3", groupId = "TaskGroup", containerFactory = "userKafkaListenerFactory")
 	public void consume(Message message) {
 		log.info("Payload received");
 
