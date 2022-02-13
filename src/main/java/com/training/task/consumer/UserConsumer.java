@@ -15,7 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
-@ConditionalOnProperty(prefix="kafka",value="enabled")
+@ConditionalOnProperty(prefix="kafkaconsumer",value="enabled")
 public class UserConsumer {
 
 	@Autowired

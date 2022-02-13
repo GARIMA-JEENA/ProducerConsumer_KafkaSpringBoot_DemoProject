@@ -19,19 +19,19 @@ public class UserConsumerServiceImplement implements UserConsumerService {
 	@Override
 	public void createUser(User user) {
 		userDao.save(user);
-		log.info("User created");
+		log.info("Created " + user);
 	}
 
 	@Override
 	public void updateUser(User user) {
 		userDao.save(user);
-		log.info("User details updated");
+		log.info("Details updated " + user);
 	}
 
 	@Override
 	public void deleteUser(User user) {
 		userDao.deleteById(user.getRollNumber());
-		log.info("User deleted");
+		log.info("Deleted " + user);
 	}
 
 }

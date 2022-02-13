@@ -21,5 +21,4 @@ public class UserUtil {
 		return User.builder().rollNumber(userDto.getRollNumber()).userName(userDto.getUserName())
 				.stream(userDto.getStream()).location(userDto.getLocation()).build();
 	}
-
 }

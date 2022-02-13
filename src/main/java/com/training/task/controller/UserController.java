@@ -1,7 +1,8 @@
 package com.training.task.controller;
 
-import java.util.List;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,22 +18,23 @@ import com.training.task.message.UserDto;
 import com.training.task.userservice.UserService;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping(value = { "/users", "/users/{rollNo}" })
 public class UserController {
 
 	@Autowired
 	protected UserService userService;
 
 	@GetMapping
-	public ResponseEntity<List<UserDto>> getAllUsers(Pageable page){
-		List<UserDto> list = userService.getAllUsers(page);
-		return new ResponseEntity<List<UserDto>>(list, HttpStatus.ACCEPTED);
-	}
-
-	@GetMapping("/{rollNumber}")
-	public ResponseEntity<?> getUser(@PathVariable String rollNumber) {
-		UserDto userDto = userService.getUser(rollNumber);
-		return new ResponseEntity<>(userDto, HttpStatus.ACCEPTED);
+	public ResponseEntity<?> getU(@PathVariable Optional<String> rollNo, Pageable page) {
+		if (rollNo.isPresent()) {
+			String rollNumber = rollNo.get();
+			System.out.println(rollNumber);
+			UserDto userDto = userService.getUser(rollNumber);
+			return new ResponseEntity<>(userDto, HttpStatus.ACCEPTED);
+		} else {
+			Page<UserDto> pagedResult = userService.getUsers(page);
+			return new ResponseEntity<>(pagedResult, HttpStatus.ACCEPTED);
+		}
 	}
 
 	@PostMapping

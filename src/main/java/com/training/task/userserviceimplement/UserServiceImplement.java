@@ -1,9 +1,9 @@
 package com.training.task.userserviceimplement;
 
-import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
@@ -18,6 +18,9 @@ import com.training.task.message.UserDto;
 import com.training.task.userservice.UserService;
 import com.training.task.util.UserUtil;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Service
 public class UserServiceImplement implements UserService {
 
@@ -30,16 +33,12 @@ public class UserServiceImplement implements UserService {
 	private static final String TOPIC = "TrainingTask3";
 
 	@Override
-	public List<UserDto> getAllUsers(Pageable page) {
+	public Page<UserDto> getUsers(Pageable page) {
 		Page<User> pagedResult = userDao.findAll(page);
-		List<User> l = pagedResult.getContent();
-		return UserUtil.convertUserToDto(l);
-	}
-
-	@Override
-	public List<UserDto> getAllUsers() {
-		List<User> user = userDao.findAll();
-		return UserUtil.convertUserToDto(user);
+		List<User> userList = pagedResult.getContent();
+		Page<UserDto> pages = new PageImpl<UserDto>(UserUtil.convertUserToDto(userList), page,
+				pagedResult.getTotalElements());
+		return pages;
 	}
 
 	@Override
@@ -60,6 +59,7 @@ public class UserServiceImplement implements UserService {
 		message.setAction(Constants.CREATE);
 		message.userDto = userDto;
 		kafkaTemplate.send(TOPIC, message);
+		log.info("Payload forwarded to Topic ");
 	}
 
 	@Override
@@ -71,19 +71,21 @@ public class UserServiceImplement implements UserService {
 		message.setAction(Constants.UPDATE);
 		message.setUserDto(userDto);
 		kafkaTemplate.send(TOPIC, message);
+		log.info("Payload forwarded to Topic ");
 	}
 
 	@Override
 	public void deleteUser(String rollNumber) {
-		if (userDao.existsById(rollNumber) == false) {
+		User user = userDao.findById(rollNumber).orElse(null);
+		if (user == null) {
 			throw new UserNotFoundException("User with Given Id does not exists.");
 		}
 		Message message = new Message();
 		message.setAction(Constants.DELETE);
-		UserDto userDto = new UserDto();
-		userDto.setRollNumber(rollNumber);
+		UserDto userDto = UserUtil.convertUserToDto(user);
 		message.setUserDto(userDto);
 		kafkaTemplate.send(TOPIC, message);
+		log.info("Payload forwarded to Topic ");
 	}
 
 }
