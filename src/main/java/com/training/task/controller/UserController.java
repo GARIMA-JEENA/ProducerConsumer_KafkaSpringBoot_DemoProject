@@ -25,7 +25,7 @@ public class UserController {
 	protected UserService userService;
 
 	@GetMapping
-	public ResponseEntity<?> getU(@PathVariable Optional<String> rollNo, Pageable page) {
+	public ResponseEntity<?> getUsers(@PathVariable Optional<String> rollNo, Pageable page) {
 		if (rollNo.isPresent()) {
 			String rollNumber = rollNo.get();
 			System.out.println(rollNumber);
