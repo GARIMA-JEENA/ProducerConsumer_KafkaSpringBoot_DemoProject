@@ -1,7 +1,5 @@
 package com.training.task.message;
 
-
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

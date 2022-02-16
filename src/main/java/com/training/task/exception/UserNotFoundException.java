@@ -1,6 +1,5 @@
 package com.training.task.exception;
 
-
 import org.springframework.stereotype.Component;
 
 import lombok.NoArgsConstructor;

@@ -1,7 +1,5 @@
 package com.training.task.exception;
 
-
-
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
